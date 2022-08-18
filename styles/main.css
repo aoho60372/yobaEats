@@ -1,0 +1,22 @@
+html, body {
+    margin: 0;
+  }
+  
+  html {
+    height: 100%;
+  }
+  
+  body {
+    overflow: hidden;
+    height: inherit;
+    background-color: black;
+  }
+
+  h1 {
+    position: fixed;
+    color: white;
+    left: 70%;
+    top: 2%;
+    user-select: none;
+    font-family: 'Courier New', Courier, monospace;
+  }
