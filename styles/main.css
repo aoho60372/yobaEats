@@ -1,22 +1,97 @@
-html, body {
+  html, body {
     margin: 0;
   }
   
   html {
     height: 100%;
+    user-select: none;
+    font-family: 'Courier New', Courier, monospace;
+    box-sizing: border-box;
   }
-  
+
+  *, *::before, *::after {
+    box-sizing: inherit;
+  }
+
   body {
     overflow: hidden;
-    height: inherit;
     background-color: black;
   }
 
-  h1 {
+  .header {
     position: fixed;
-    color: white;
-    left: 70%;
-    top: 2%;
-    user-select: none;
-    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    height: fit-content;
+    margin-top: 20px;
   }
+
+  .header__opts {
+    list-style-type: none;
+  }
+
+  .-js-not-display {
+    display: none !important;
+  }
+
+  .--menu{
+    background-color: rgb(255, 255, 255, 0.95);
+    padding: 10px;
+    border-radius: 20px;
+    color: black;
+    margin: 0 0px 0px 20px;
+  }
+
+  .--button {
+    display: inline-block;
+  }
+
+  .--button:hover {
+    cursor: pointer;
+    box-shadow: 0px 0px 24px rgba(255,255,255,.64);
+  }
+
+  .--button:active {
+    transform: translate(-1px, 3px);
+  }
+
+  .-js-button-pressed {
+    box-shadow: 0px 0px 24px rgba(255,255,255,.64);
+    transform: translate(-1px, 3px);
+  }
+
+  .--header-align {
+    display: flex;
+    justify-content: flex-end;
+    margin: auto 20px;
+  }
+
+  .--menu-field {
+    margin-top: 20px;
+    max-width: 500px;
+  }
+
+  h1 {
+    color: white;
+    margin: 0 0px 20px 20px;
+    width: 40vw;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .--div-align {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  input[type="radio" i]{
+    margin: 0;
+  }
+

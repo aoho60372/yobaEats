@@ -2,6 +2,20 @@ const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 var textField = document.querySelector("h1");
 
+var kolobokStartAmountHtml = document.querySelector(".-js-kolobok-start-amount");
+var ballSpawnTypeClickHtml = document.querySelector(".-js-ball-spawn-type-click");
+var ballSpawnTypeMousemoveHtml = document.querySelector(".-js-ball-spawn-type-mousemove");
+var kolobokStartSizeHtml = document.querySelector(".-js-kolobok-start-size");
+var kolobokStartSizeShowHtml = document.querySelector(".-js-kolobok-start-size-show");
+var animCycleHtml = document.querySelector(".-js-anim-cycle");
+var animCycleShowHtml = document.querySelector(".-js-anim-cycle-show");
+var ballSpawnAmountHtml = document.querySelector(".-js-ball-spawn-amount");
+var ballSpawnAmountShowHtml = document.querySelector(".-js-ball-spawn-amount-show");
+var kolobokSpeedHtml = document.querySelector(".-js-kolobok-speed");
+var kolobokSpeedShowHtml = document.querySelector(".-js-kolobok-speed-show");
+var ballSpeedHtml = document.querySelector(".-js-ball-speed");
+var ballSpeedShowHtml = document.querySelector(".-js-ball-speed-show");
+
 var width = canvas.width = window.innerWidth;
 var height = canvas.height = window.innerHeight;
 
@@ -14,14 +28,76 @@ var eatedCount = 0;
 // opts-start
 
 var kolobokStartSize = width * 0.1;
-var animCycle = 400;
-var kolobokStartAmount = 1;
+var animCycle = 200;
+var kolobokStartAmount = 0;
 var ballSpawnAmount = 1;
 var ballSpawnType = 'click';
-var kolobokSpeed = 2;
+var kolobokSpeed = 3;
 var ballSpeed = 10;
+var ballCooldown = 0;
 
 // opts-end
+
+// getting opts
+
+kolobokStartAmountHtml.addEventListener('input', function(){
+    kolobokStartAmount = kolobokStartAmountHtml.value - 1;
+    
+    spawnKolobok();
+});
+
+kolobokStartSizeHtml.addEventListener('input', function(){
+    kolobokStartSizeShowHtml.textContent = kolobokStartSizeHtml.value;
+    kolobokStartSize = width * (kolobokStartSizeHtml.value / 100);
+
+    spawnKolobok();
+});
+
+ballSpawnTypeClickHtml.addEventListener('click', function(){
+    ballSpawnType = ballSpawnTypeClickHtml.value;
+    canvas.removeEventListener('mousemove', drawBall);
+    canvas.addEventListener(ballSpawnType, drawBall);
+});
+
+ballSpawnTypeMousemoveHtml.addEventListener('click', function(){
+    ballSpawnType = ballSpawnTypeMousemoveHtml.value;
+    canvas.removeEventListener('click', drawBall);
+    canvas.addEventListener(ballSpawnType, drawBall);
+});
+
+animCycleHtml.addEventListener('input', function(){
+    animCycleShowHtml.textContent = animCycleHtml.value;
+    animCycle = animCycleHtml.value;
+});
+
+ballSpawnAmountHtml.addEventListener('input', function(){
+    ballSpawnAmountShowHtml.textContent = ballSpawnAmountHtml.value;
+    ballSpawnAmount = ballSpawnAmountHtml.value;
+});
+
+kolobokSpeedHtml.addEventListener('input', function(){
+    kolobokSpeedShowHtml.textContent = kolobokSpeedHtml.value;
+    kolobokSpeed = kolobokSpeedHtml.value;
+
+    for (var ball of balls){
+        if (Kolobok.prototype.isPrototypeOf(ball)){
+            ball.velX = random(-kolobokSpeed, kolobokSpeed);
+            ball.velY = random(-kolobokSpeed, kolobokSpeed);
+        }
+    }
+});
+
+ballSpeedHtml.addEventListener('input', function(){
+    ballSpeedShowHtml.textContent = ballSpeedHtml.value;
+    ballSpeed = ballSpeedHtml.value;
+
+    for (var ball of balls){
+        if (!(Kolobok.prototype.isPrototypeOf(ball))){
+            ball.velX = random(-ballSpeed, ballSpeed);
+            ball.velY = random(-ballSpeed, ballSpeed);
+        }
+    }
+});
 
 // function to generate random number
 
@@ -36,18 +112,43 @@ function randomRGB() {
 }
 
 function drawBall(e) {
-    var cursorX = e.pageX;
-    var cursorY = e.pageY;
-
-    do {
-        var velX = random(-ballSpeed, ballSpeed);
-        var velY = random(-ballSpeed, ballSpeed);
-    } while (velY === velX === 0);
-
-    for (var i = 0; i <= ballSpawnAmount; i++){
-        balls.push(new Ball(cursorX, cursorY, velX, velY, randomRGB(), random(10, 20)));
-    }
+    if (ballSpawnType === 'click'){
+        var cursorX = e.pageX;
+        var cursorY = e.pageY;
     
+        do {
+            var velX = random(-ballSpeed, ballSpeed);
+            var velY = random(-ballSpeed, ballSpeed);
+        } while (velY === velX === 0);
+    
+        for (var i = 0; i <= ballSpawnAmount; i++){
+            balls.push(new Ball(cursorX, cursorY, velX, velY, randomRGB(), random(10, 20)));
+        }
+    } else {
+        if (ballCooldown <= 1){
+            var cursorX = e.pageX;
+            var cursorY = e.pageY;
+        
+            do {
+                var velX = random(-ballSpeed, ballSpeed);
+                var velY = random(-ballSpeed, ballSpeed);
+            } while (velY === velX === 0);
+        
+            for (var i = 0; i <= ballSpawnAmount; i++){
+                balls.push(new Ball(cursorX, cursorY, velX, velY, randomRGB(), random(10, 20)));
+            }
+        }
+        ballCooldown++;
+        if (ballCooldown >= 15) {ballCooldown = 0};
+    }  
+}
+
+function spawnKolobok(){
+    balls.splice(0, balls.length);
+
+    for (var i = 0; i <= kolobokStartAmount; i++){
+        balls.push(new Kolobok(width / 2, height / 2, random(-kolobokSpeed, kolobokSpeed), random(-kolobokSpeed, kolobokSpeed), imgKolobok, kolobokStartSize));
+    }
 }
 
 class Ball {
@@ -77,6 +178,7 @@ class Ball {
         this.cooldown = 0;
         this.animCycle = 0;
         this.updateCycle = 0;
+        this.startSize = size;
     }
 
     draw() {
@@ -196,7 +298,7 @@ class Kolobok extends Ball {
     }
 
     birth() {
-        if ((this.size >= (width * 0.3)) || (this.size >= (height * 0.3))){
+        if (this.size - this.startSize >= 100){
             for (var ball of balls){
                 ball.velX = ball.velY = 0;
                 if (this === ball){
@@ -237,9 +339,7 @@ class Kolobok extends Ball {
 }
 
 imgKolobok.onload = function() {
-    for (var i = 0; i <= kolobokStartAmount; i++){
-        balls.push(new Kolobok(width / 2, height / 2, random(-kolobokSpeed, kolobokSpeed), random(-kolobokSpeed, kolobokSpeed), imgKolobok, kolobokStartSize));
-    }
+    spawnKolobok();
 
     function loop() {
         width = canvas.width = window.innerWidth;
@@ -253,7 +353,7 @@ imgKolobok.onload = function() {
             ball.update();
             ball.collisionDetect();
         }
-
+        //console.log('БолСпавнТайп: ' + ballSpawnType + ' БолСпавнТайпКликХТМЛ: ' + ballSpawnTypeClickHtml.value + ' БолСпавнТайпМаусХТМЛ: ' + ballSpawnTypeMousemoveHtml.value);
         requestAnimationFrame(loop);
     }
     canvas.addEventListener(ballSpawnType, drawBall);

@@ -8,8 +8,76 @@
         <html lang="ru">
     </head>
     <body>
+        <div class="header">
+            <div class="header__buttons --header-align">
+                <span class="stats__title --menu --button -js-checking">Статистика</span>
+                <span class="info__title --menu --button -js-checking">Об игре</span>
+                <span class="opts__title --menu --button -js-checking">Настройки</span> 
+            </div>
+            <div class="header__fields --header-align">
+                <span class="header__stats --menu --menu-field -js-not-display -js-checking">А здесь ничего нет :) (пока что)</span>
+                <span class="header__info --menu --menu-field -js-not-display -js-checking">Суть игры в откармливании Ехидных Колобков. Каждый съеденый шарик прибавляет размеру Колобку.
+                    <br><br>По достижению определенного размера (от 100 съеденых шариков), Колобок лопнет и произведет на свет два дитя.
+                    <br><br><b>Внимание!</b> Изменение изначального кол-во Колобков и их размеров в опциях сбросит игру.
+                </span>
+                <ul class="header__opts --menu --menu-field -js-not-display -js-checking">
+                    <li class="-js-checking">Изначальное кол-во Колобков: <input class="-js-kolobok-start-amount -js-checking" type="number" min="1" max="30" value="1"></li>
+                    <hr class="-js-checking">
+                    <li class="-js-checking">
+                        <form class="-js-checking">
+                            <p class="-js-checking">Как создавать шарики</p>
+                            <div class="--div-align -js-checking">
+                                <input class="-js-ball-spawn-type-click -js-checking" type="radio" name = "spawn-type" value="click" checked>По клику
+                                <input class="-js-ball-spawn-type-mousemove -js-checking" type="radio" name = "spawn-type" value="mousemove">По движению указателя
+                            </div>
+                        </form>
+                    </li>
+                    <hr class="-js-checking">
+                    <li class="-js-checking">
+                        <p class="-js-checking">Изначальный размер Колобка</p>
+                        <div class="--div-align -js-checking">
+                            <input class="-js-kolobok-start-size -js-checking" type="range" min="1" max="20" value="10">
+                            <span class="-js-kolobok-start-size-show -js-checking">10</span>
+                        </div>
+                    </li>
+                    <hr class="-js-checking">
+                    <li class="-js-checking">
+                        <p class="-js-checking">Скорость анимации размножения</p>
+                        <div class="--div-align -js-checking">
+                            <input class="-js-anim-cycle -js-checking" type="range" min="100" max="1000" value="200">
+                            <span class="-js-anim-cycle-show -js-checking">200</span>
+                        </div>
+                    </li>
+                    <hr class="-js-checking">
+                    <li class="-js-checking">
+                        <p class="-js-checking">Количество создаваемых шариков</p>
+                        <div class="--div-align -js-checking">
+                            <input class="-js-ball-spawn-amount -js-checking" type="range" min="1" max="20" value="1">
+                            <span class="-js-ball-spawn-amount-show -js-checking">1</span>
+                        </div>
+                    </li>
+                    <hr class="-js-checking">
+                    <li class="-js-checking">
+                        <p class="-js-checking">Скорость Колобка</p>
+                        <div class="--div-align -js-checking">
+                            <input class="-js-kolobok-speed -js-checking" type="range" min="1" max="100" value="3">
+                            <span class="-js-kolobok-speed-show -js-checking">3</span>
+                        </div>
+                    </li>
+                    <hr class="-js-checking">
+                    <li class="-js-checking">
+                        <p class="-js-checking">Скорость шариков</p>
+                        <div class="--div-align -js-checking">
+                            <input class="-js-ball-speed -js-checking" type="range" min="1" max="100" value="10">
+                            <span class="-js-ball-speed-show -js-checking">10</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
         <h1>Ехидный колобок слопал: </h1>
         <canvas></canvas>
         <script src="scripts/game.js"></script>
+        <script src="scripts/menu.js"></script>
     </body>
 </html>
