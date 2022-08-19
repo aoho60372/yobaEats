@@ -17,8 +17,9 @@ var kolobokStartSize = width * 0.1;
 var animCycle = 400;
 var kolobokStartAmount = 1;
 var ballSpawnAmount = 1;
-var ballSpawnType = 'mousedown';
-var mouseDownSwitcher = 0;
+var ballSpawnType = 'click';
+var kolobokSpeed = 2;
+var ballSpeed = 10;
 
 // opts-end
 
@@ -34,28 +35,17 @@ function randomRGB() {
   return `rgb(${random(0, 255)},${random(0, 255)},${random(0, 255)})`;
 }
 
-canvas.ondragstart = function() {
-    return false;
-};
-
-canvas.onmousedown = function() {mouseDownSwitcher = 1;}
-canvas.onmouseup = function() {mouseDownSwitcher = 0;}
-
 function drawBall(e) {
     var cursorX = e.pageX;
     var cursorY = e.pageY;
 
     do {
-        var velX = random(-7, 7);
-        var velY = random(-7, 7);
+        var velX = random(-ballSpeed, ballSpeed);
+        var velY = random(-ballSpeed, ballSpeed);
     } while (velY === velX === 0);
 
     for (var i = 0; i <= ballSpawnAmount; i++){
-        if (ballSpawnType === 'mousedown' && mouseDownSwitcher === 1){
-            do {
-                balls.push(new Ball(cursorX, cursorY, velX, velY, randomRGB(), random(10, 20)));
-            } while (mouseDownSwitcher === 0);
-        } //else balls.push(new Ball(cursorX, cursorY, velX, velY, randomRGB(), random(10, 20)));
+        balls.push(new Ball(cursorX, cursorY, velX, velY, randomRGB(), random(10, 20)));
     }
     
 }
@@ -131,8 +121,8 @@ class Ball {
                             this.velX = -(this.velX);
                             this.velY = -(this.velY);
                             do {
-                                ball.velX = random(-7, 7);
-                                ball.velY = random(-7, 7);
+                                ball.velX = random(-ballSpeed, ballSpeed);
+                                ball.velY = random(-ballSpeed, ballSpeed);
                             } while (ball.velY === ball.velX === 0);
                         }
                     }  
@@ -192,8 +182,8 @@ class Kolobok extends Ball {
                         this.size++;
     
                         if (this.cooldown === 5){
-                            this.velX = random(-7, 7);
-                            this.velY = random(-7, 7);
+                            this.velX = random(-kolobokSpeed, kolobokSpeed);
+                            this.velY = random(-kolobokSpeed, kolobokSpeed);
                             this.cooldown = 0;
                         }
                         
@@ -229,11 +219,17 @@ class Kolobok extends Ball {
             }
             if (this.animCycle >= animCycle){
                 for (var ball of balls){
-                    ball.velX = random(-7, 7);
-                    ball.velY = random(-7, 7);
+                    var speed;
+
+                    if (!(Kolobok.prototype.isPrototypeOf(ball))){
+                        speed = ballSpeed;
+                    } else speed = kolobokSpeed;
+
+                    ball.velX = random(-speed, speed);
+                    ball.velY = random(-speed, speed);
                     this.animCycle = 0;
                 }
-                balls.unshift(new Kolobok(this.x + this.size, this.y, random(-7, 7), random(-7, 7), imgKolobok, kolobokStartSize));
+                balls.unshift(new Kolobok(this.x + this.size, this.y, random(-kolobokSpeed, kolobokSpeed), random(-kolobokSpeed, kolobokSpeed), imgKolobok, kolobokStartSize));
                 canvas.addEventListener(ballSpawnType, drawBall);
             }
         } else return;
@@ -242,7 +238,7 @@ class Kolobok extends Ball {
 
 imgKolobok.onload = function() {
     for (var i = 0; i <= kolobokStartAmount; i++){
-        balls.push(new Kolobok(width / 2, height / 2, random(-7, 7), random(-7, 7), imgKolobok, kolobokStartSize));
+        balls.push(new Kolobok(width / 2, height / 2, random(-kolobokSpeed, kolobokSpeed), random(-kolobokSpeed, kolobokSpeed), imgKolobok, kolobokStartSize));
     }
 
     function loop() {
