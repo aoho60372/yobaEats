@@ -16,6 +16,7 @@
   body {
     overflow: hidden;
     background-color: black;
+    font-size: 2vh;
   }
 
   .header {
@@ -23,7 +24,6 @@
     display: flex;
     flex-direction: column;
     width: 100vw;
-    height: fit-content;
     margin-top: 20px;
   }
 
@@ -69,7 +69,7 @@
 
   .--menu-field {
     margin-top: 20px;
-    max-width: 500px;
+    max-width: 800px;
   }
 
   h1 {
